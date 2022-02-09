@@ -1,7 +1,9 @@
 package com.example.study.querydsl;
 
 import com.example.study.querydsl.entity.Member;
+import com.example.study.querydsl.entity.QTeam;
 import com.querydsl.core.QueryResults;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -13,6 +15,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 import static com.example.study.querydsl.entity.QMember.member;
+import static com.example.study.querydsl.entity.QTeam.team;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -143,6 +146,33 @@ public class QuerydslBaseTests {
                 .offset(1)
                 .limit(2)
                 .fetchResults(); // (미지원)
+    }
+
+    @Test
+    public void aggregation() {
+        List<Tuple> result = queryFactory
+                .select(
+                        member.count(),
+                        member.age.sum(),
+                        member.age.avg(),
+                        member.age.max(),
+                        member.age.min()
+                )
+                .from(member)
+                .fetch();
+    }
+
+    /**
+     * 팀의 이름과 각 팀의 평균 연령을 구하여라.
+     * */
+    @Test
+    public void group() {
+        List<Tuple> result = queryFactory
+                .select(team.name, member.age.avg())
+                .from(member)
+                .join(member.team)
+                .groupBy(team.name)
+                .fetch();
     }
 
 }
