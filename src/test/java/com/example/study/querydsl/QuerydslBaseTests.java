@@ -5,6 +5,7 @@ import com.example.study.querydsl.entity.QMember;
 import com.example.study.querydsl.entity.QTeam;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -243,6 +244,17 @@ public class QuerydslBaseTests {
         for (Tuple tuple : result) {
             System.out.println(tuple);
         }
+    }
+
+    @Test
+    public void fetchJoin() {
+        List<Member> result = queryFactory
+                .selectFrom(member)
+                .join(member.team, team).fetchJoin()
+                .where(member.userName.eq("member1"))
+                .fetch();
+
+        System.out.println(result);
     }
 
 }
