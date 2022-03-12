@@ -6,6 +6,7 @@ import com.example.study.querydsl.entity.QTeam;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -393,6 +394,23 @@ public class QuerydslBaseTests {
             System.out.println("username = " + username + " age = " + age + " rank = "
                     + rank);
         }
+    }
+
+    @Test
+    public void constant() {
+        Tuple result = queryFactory
+                .select(member.userName, Expressions.constant("A")) //상수가 필요하면 Expressions.constant(xxx) 사용
+                .from(member)
+                .fetchFirst();
+    }
+
+    @Test
+    public void concat() {
+        String result = queryFactory
+                .select(member.userName.concat("_").concat(member.age.stringValue()))
+                .from(member)
+                .where(member.userName.eq("member1"))
+                .fetchOne();
     }
 
 }
