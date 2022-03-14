@@ -1,6 +1,7 @@
 package com.example.study.querydsl;
 
 import com.example.study.querydsl.dto.MemberDTO;
+import com.example.study.querydsl.dto.QMemberDTO;
 import com.example.study.querydsl.dto.UserDTO;
 import com.example.study.querydsl.entity.Member;
 import com.example.study.querydsl.entity.QMember;
@@ -476,6 +477,8 @@ public class QuerydslBaseTests {
     // 방법 2
     @Test
     public void findDtoByConstructor() {
+        // 생성자를 더 추가하고 넣으면 런타임 에러가 난다
+
         List<MemberDTO> list = queryFactory
                 .select(Projections.constructor(MemberDTO.class,
                         member.userName,
@@ -509,6 +512,24 @@ public class QuerydslBaseTests {
         // ExpressionUtils.as(source,alias) : 필드나, 서브 쿼리에 별칭 적용
         // username.as("memberName") : 필드에 별칭 적용
 
+    }
+
+    @Test
+    public void findDtoByQueryProjection() {
+        // 참고: distinct는 JPQL의 distinct와 같다.
+
+        List<MemberDTO> list = queryFactory
+                .select(new QMemberDTO(member.userName, member.age)).distinct()
+                .from(member)
+                .fetch();
+
+        for (MemberDTO dto : list) {
+            System.out.println("dto : " + dto);
+        }
+        // 컴파일 에러로 바로 잡을 수 있다
+
+        // 이 방법은 컴파일러로 타입을 체크할 수 있으므로 가장 안전한 방법이다. 다만 DTO에 QueryDSL
+        // 어노테이션을 유지해야 하는 점과 DTO까지 Q 파일을 생성해야 하는 단점이 있다.
     }
 
 }
