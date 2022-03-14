@@ -413,4 +413,32 @@ public class QuerydslBaseTests {
                 .fetchOne();
     }
 
+    @Test
+    public void simpleProjection() {
+        List<String> list = queryFactory
+                .select(member.userName)
+                .from(member)
+                .fetch();
+
+        for (String s : list) {
+            System.out.println("s : " + s);
+        }
+
+        // - 프로젝션 대상이 하나면 타입을 명확하게 지정할 수 있음
+        // - 프로젝션 대상이 둘 이상이면 튜플이나 DTO로 조회
+
+        List<Tuple> result = queryFactory
+                .select(member.userName, member.age)
+                .from(member)
+                .fetch();
+
+        for (Tuple tuple : result) {
+            String username = tuple.get(member.userName);
+            Integer age = tuple.get(member.age);
+            System.out.println("username : " + username);
+            System.out.println("age : " + age);
+        }
+
+    }
+
 }
