@@ -56,6 +56,10 @@ class MemberJpaRepositoryTest {
 
         assertThat(list.get(0).getUserName()).isEqualTo("member4");
 
+        List<MemberTeamDTO> result = memberJpaRepository.search(condition);
+
+        assertThat(result.get(0).getUserName()).isEqualTo("member4");
+
     }
 
 }
