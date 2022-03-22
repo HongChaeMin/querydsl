@@ -80,11 +80,11 @@ public class MemberJpaRepository {
 
         return queryFactory
                 .select(new QMemberTeamDTO(
-                        member.id.as("memberId"),
+                        member.id,
                         member.userName,
                         member.age,
-                        team.id.as("teamId"),
-                        team.name.as("teamName")
+                        team.id,
+                        team.name
                 ))
                 .from(member)
                 .leftJoin(member.team, team)
@@ -92,14 +92,15 @@ public class MemberJpaRepository {
                 .fetch();
     }
 
+    //where 파라미터 방식은 이런식으로 재사용이 가능하다.
     public List<MemberTeamDTO> search(MemberSearchCondition condition) {
         return queryFactory
                 .select(new QMemberTeamDTO(
-                        member.id.as("memberId"),
+                        member.id,
                         member.userName,
                         member.age,
-                        team.id.as("teamId"),
-                        team.name.as("teamName")
+                        team.id,
+                        team.name
                 ))
                 .from(member)
                 .leftJoin(member.team, team)

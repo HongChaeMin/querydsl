@@ -3,11 +3,13 @@ package com.example.study.querydsl.repository;
 import com.example.study.querydsl.dto.MemberSearchCondition;
 import com.example.study.querydsl.dto.MemberTeamDTO;
 import com.example.study.querydsl.entity.Member;
+import com.example.study.querydsl.entity.Team;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 
 import java.util.List;
 
@@ -60,6 +62,20 @@ class MemberJpaRepositoryTest {
 
         assertThat(result.get(0).getUserName()).isEqualTo("member4");
 
+    }
+
+    @Transactional
+    @Test
+    public void init() {
+        Team teamA = new Team("teamA");
+        Team teamB = new Team("teamB");
+
+        em.persist(teamA);
+        em.persist(teamB);
+        for (int i = 0; i < 100; i++) {
+            Team selectedTeam = i % 2 == 0 ? teamA : teamB;
+            em.persist(new Member("member" + i, i, selectedTeam));
+        }
     }
 
 }
