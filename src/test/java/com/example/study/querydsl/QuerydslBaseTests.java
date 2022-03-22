@@ -5,18 +5,13 @@ import com.example.study.querydsl.dto.QMemberDTO;
 import com.example.study.querydsl.dto.UserDTO;
 import com.example.study.querydsl.entity.Member;
 import com.example.study.querydsl.entity.QMember;
-import com.example.study.querydsl.entity.QTeam;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.CaseBuilder;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -24,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 
 import java.util.List;
 
@@ -643,6 +637,32 @@ public class QuerydslBaseTests {
                 .delete(member)
                 .where(member.age.gt(18))
                 .execute();
+    }
+
+    @Test
+    public void sqlFunction() {
+        // 왜 안될까...
+        List<String> result = queryFactory
+                .select(Expressions.stringTemplate("function('replace', {0}, 'member', 'M')", member.userName))
+                .from(member)
+                .fetch();
+
+        for (String str : result) {
+            System.out.println("str = " + str);
+        }
+
+    }
+
+    @Test
+    public void sqlFunction1() {
+        List<String> list = queryFactory
+                .select(member.userName)
+                .from(member)
+                .where(member.userName.eq(
+                        Expressions.stringTemplate("function('upper', {0})", member.userName)
+                ))
+                .fetch();
+        // 얘는 되네
     }
 
 
