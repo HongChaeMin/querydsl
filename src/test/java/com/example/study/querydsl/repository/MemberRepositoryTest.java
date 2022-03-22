@@ -6,6 +6,8 @@ import com.example.study.querydsl.entity.Member;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -40,6 +42,16 @@ public class MemberRepositoryTest {
         List<MemberTeamDTO> result = memberRepository.search(condition);
 
         assertThat(result.get(0).getUserName()).isEqualTo("member4");
+
+    }
+
+    @Test
+    public void searchPageComplex() {
+        PageRequest of = PageRequest.of(0, 3);
+
+        Page<MemberTeamDTO> result = memberRepository.searchPageSimple(new MemberSearchCondition(), of);
+
+        assertThat(result.getSize()).isEqualTo(3);
 
     }
 
