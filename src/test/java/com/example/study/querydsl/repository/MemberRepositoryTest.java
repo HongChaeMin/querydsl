@@ -47,11 +47,13 @@ public class MemberRepositoryTest {
 
     @Test
     public void searchPageComplex() {
-        PageRequest of = PageRequest.of(0, 3);
+        PageRequest of = PageRequest.of(1, 3);
 
-        Page<MemberTeamDTO> result = memberRepository.searchPageSimple(new MemberSearchCondition(), of);
+        Page<MemberTeamDTO> result = memberRepository.searchPageComplex(new MemberSearchCondition(), of);
 
-        assertThat(result.getSize()).isEqualTo(3);
+        System.out.println(result);
+
+        assertThat(result.getTotalPages()).isEqualTo(2);
 
     }
 
