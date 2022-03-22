@@ -591,4 +591,59 @@ public class QuerydslBaseTests {
         return userNameEq(userNameCond).and(ageEq(ageCond));
     }
 
+    @Test
+    public void bulkUpdate() {
+        // member1 = 10 -> DB member1
+        // member2 = 20 -> DB member2
+        // member3 = 30 -> DB member3
+        // member4 = 40 -> DB member4
+
+        long count = queryFactory
+                .update(member)
+                .set(member.userName, "비회원")
+                .where(member.age.lt(28))
+                .execute();
+
+        // member1 = 10 -> DB 비회원
+        // member2 = 20 -> DB 비회원
+        // member3 = 30 -> DB member3
+        // member4 = 40 -> DB member4
+
+        // 해주는게 안전함
+        em.flush();
+        em.clear();
+
+        // 영속성 컨텍스트에 데이터가 이미 존재하면 조회 무시, 영속성 컨텍스트가 우선 순위, 데이터가 달라짐
+        List<Member> members = queryFactory
+                .selectFrom(member)
+                .fetch();
+
+        // 주의: JPQL 배치와 마찬가지로, 영속성 컨텍스트에 있는 엔티티를 무시하고 실행되기 때문에 배치 쿼리를
+        // 실행하고 나면 영속성 컨텍스트를 초기화 하는 것이 안전하다.
+
+        Assertions.assertThat(count).isEqualTo(2);
+    }
+
+    @Test
+    public void bulkAdd() {
+        long count = queryFactory
+                .update(member)
+                .set(member.age, member.age.add(1)) // 빼고 싶을땐 -1
+                .execute();
+
+        long count2 = queryFactory
+                .update(member)
+                .set(member.age, member.age.multiply(1)) // 곱하기
+                .execute();
+    }
+
+    @Test
+    public void bulkDelete() {
+        long count = queryFactory
+                .delete(member)
+                .where(member.age.gt(18))
+                .execute();
+    }
+
+
 }
