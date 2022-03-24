@@ -3,6 +3,7 @@ package com.example.study.querydsl.repository;
 import com.example.study.querydsl.dto.MemberSearchCondition;
 import com.example.study.querydsl.dto.MemberTeamDTO;
 import com.example.study.querydsl.entity.Member;
+import com.example.study.querydsl.entity.QMember;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
+import static com.example.study.querydsl.entity.QMember.member;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -55,6 +57,15 @@ public class MemberRepositoryTest {
 
         assertThat(result.getTotalPages()).isEqualTo(2);
 
+    }
+
+    @Test
+    public void querydslPredicateExecutor() {
+        Iterable<Member> memberResult = memberRepository.findAll(member.age.between(20, 40).and(member.userName.eq("member1")));
+
+        for (Member findMember : memberResult) {
+            System.out.println("member : " + findMember);
+        }
     }
 
 }
