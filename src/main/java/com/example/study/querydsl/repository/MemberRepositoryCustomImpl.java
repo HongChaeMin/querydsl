@@ -4,16 +4,15 @@ import com.example.study.querydsl.dto.MemberSearchCondition;
 import com.example.study.querydsl.dto.MemberTeamDTO;
 import com.example.study.querydsl.dto.QMemberTeamDTO;
 import com.example.study.querydsl.entity.Member;
+import com.example.study.querydsl.repository.support.Querydsl4RepositorySupport;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
-import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.support.PageableExecutionUtils;
 
 import javax.persistence.EntityManager;
